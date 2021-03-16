@@ -19,4 +19,4 @@ jobs:
         with:
           # FOSSA Push-Only API Token
           fossa-api-key: 59b5ba722f85a6f3816ffbf687bd73cf
-          github-token: ${{ secret.GH_TOKEN }}
+          github-token: ${{ secrets.GH_TOKEN }}
