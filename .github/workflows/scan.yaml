@@ -1,0 +1,22 @@
+name: Scan
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '18 10 * * 3'
+
+jobs:
+  fossa:
+    name: FOSSA
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run FOSSA scan and upload build data
+        uses: fossa-contrib/fossa-action@v1
+        with:
+          # FOSSA Push-Only API Token
+          fossa-api-key: 59b5ba722f85a6f3816ffbf687bd73cf
+          github-token: ${{ github.token }}
