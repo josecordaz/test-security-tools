@@ -19,5 +19,5 @@ jobs:
         uses: fossa-contrib/fossa-action@v1
         with:
           # FOSSA Push-Only API Token
-          fossa-api-key: 59b5ba722f85a6f3816ffbf687bd73cf
-          github-token: ${{ secrets.GH_TOKEN }}
+          fossa-api-key: ${{ secrets.FOSSA_API_KEY }}
+          github-token: ${{ secrets.GH_TOKEN
