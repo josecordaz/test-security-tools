@@ -64,7 +64,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_API_TOKEN }}
         with:
-          image: ${{ secrets.DOCKER_HUB_USERNAME }}/test-security-tools:${{ github.sha }}
+          image: josecordaz/test-security-tools:ffb77276eddf1659780c78e1a0ec3ab4dd5d7c54
           args: -d
 #          args: --sarif-file-output=/github/workspace/snyk.sarif --file=go.mod -d
 #          sarif: true
