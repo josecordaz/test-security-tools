@@ -43,10 +43,10 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ github.repository_owner }}/test-security-tools:${{ github.sha }}
+          tags: docker.pkg.github.com/${{ github.repository_owner }}/test-security-tools:${{ github.sha }}
       - name: Inspect
         run: |
-          docker buildx imagetools inspect ${{ github.repository_owner }}/test-security-tools:${{ github.sha }}
+          docker buildx imagetools inspect docker.pkg.github.com/${{ github.repository_owner }}/test-security-tools:${{ github.sha }}
 
 # Uncomment this once docker works
 #  snyk:
