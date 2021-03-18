@@ -61,7 +61,6 @@ jobs:
         with:
           image: ${{ secrets.DOCKER_HUB_USERNAME }}/test-security-tools:${{ github.sha }}
           json: true
-          args: --file=Dockerfile
 #      - name: Run Snyk to check for vulnerabilities
 #        uses: snyk/actions/golang@master
 #        env:
