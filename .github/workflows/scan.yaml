@@ -60,7 +60,11 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_API_TOKEN }}
         with:
           image: ${{ secrets.DOCKER_HUB_USERNAME }}/test-security-tools:${{ github.sha }}
-          json: true
+          sarif: true
+          command: |
+            test > snyk.sarif
+            pwd
+            ls
 #      - name: Run Snyk to check for vulnerabilities
 #        uses: snyk/actions/golang@master
 #        env:
