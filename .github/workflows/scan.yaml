@@ -65,6 +65,13 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_API_TOKEN }}
         with:
           args: --sarif-file-output=snyk.sarif
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'test-security-tools:${{ github.sha }}'
+          format: 'template'
+          template: '@/contrib/sarif.tpl'
+          output: 'trivy-results.sarif'
 #      - name: Set up Docker Buildx
 #        id: buildx
 #        uses: docker/setup-buildx-action@v1
