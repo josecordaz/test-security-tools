@@ -44,8 +44,6 @@ jobs:
           context: .
           push: true
           tags: ${{ github.repository_owner }}/test-security-tools:${{ github.sha }}
-          cache-from: type=registry,ref=${{ github.repository_owner }}/test-security-tools:${{ github.sha }}
-          cache-to: type=inline
       - name: Inspect
         run: |
           docker buildx imagetools inspect ${{ github.repository_owner }}/test-security-tools:${{ github.sha }}
