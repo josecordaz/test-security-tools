@@ -31,12 +31,10 @@ jobs:
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v1
-        with:
-          install: true
-          context: .
-          file: ./Dockerfile
-          tags: test-security-tools:${{ github.sha }}
-          outputs: type=docker,dest=/tmp/test-security-tools.tar
+      - name: Builder instance name
+        run: echo ${{ steps.buildx.outputs.name }}
+      - name: Available platforms
+        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: Upload test-security-tools image as artifact
         uses: actions/upload-artifact@v2
         with:
