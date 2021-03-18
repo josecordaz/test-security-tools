@@ -51,6 +51,7 @@ jobs:
     runs-on: ubuntu-latest
 #    needs: docker
     steps:
+      - uses: actions/checkout@v2
       - name: Login to GitHub Packages Docker Registry
         uses: docker/login-action@v1
         with:
@@ -65,7 +66,7 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_API_TOKEN }}
         with:
           image: josecordaz/test-security-tools:ffb77276eddf1659780c78e1a0ec3ab4dd5d7c54
-          args: -d --print-deps
+          args: -d --print-deps --project-name=
 #          args: --sarif-file-output=/github/workspace/snyk.sarif --file=go.mod -d
 #          sarif: true
 #          args:
