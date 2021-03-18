@@ -34,7 +34,7 @@ jobs:
           context: .
           file: ./Dockerfile
           tags: test-security-tools:${{ github.sha }}
-          outputs: type=docker,dest=/tmp/myimage.tar
+          outputs: type=docker,dest=/tmp/test-security-tools.tar
       - name: Upload test-security-tools image as artifact
         uses: actions/upload-artifact@v2
         with:
@@ -46,11 +46,17 @@ jobs:
     runs-on: ubuntu-latest
     needs: docker
     steps:
-      - name: Download artifacts (Docker images) from previous workflows
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Download artifact
         uses: actions/download-artifact@v2
-      - name: Load Docker images from previous workflows
+        with:
+          name: test-security-tools
+          path: /tmp
+      - name: Load Docker image
         run: |
-          docker load --input test-security-tools.tar
+          docker load --input /tmp/test-security-tools.tar
+          docker image ls -a
       - name: Run Snyk to check Docker image for vulnerabilities
         # Snyk can be used to break the build when it detects vulnerabilities.
         # In this case we want to upload the issues to GitHub Code Scanning
@@ -74,28 +80,28 @@ jobs:
         with:
           sarif_file: snyk.sarif
 
-  trivy:
-    name: Trivy
-    runs-on: ubuntu-latest
-    needs: docker
-    steps:
-      - name: Download artifacts (Docker images) from previous workflows
-        uses: actions/download-artifact@v2
-      - name: Load Docker images from previous workflows
-        run: |
-          docker load --input test-security-tools.tar
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: 'test-security-tools:${{ github.sha }}'
-          format: 'template'
-          template: '@/contrib/sarif.tpl'
-          output: 'trivy-results.sarif'
-
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v1
-        with:
-          sarif_file: 'trivy-results.sarif'
+#  trivy:
+#    name: Trivy
+#    runs-on: ubuntu-latest
+#    needs: docker
+#    steps:
+#      - name: Download artifacts (Docker images) from previous workflows
+#        uses: actions/download-artifact@v2
+#      - name: Load Docker images from previous workflows
+#        run: |
+#          docker load --input test-security-tools.tar
+#      - name: Run Trivy vulnerability scanner
+#        uses: aquasecurity/trivy-action@master
+#        with:
+#          image-ref: 'test-security-tools:${{ github.sha }}'
+#          format: 'template'
+#          template: '@/contrib/sarif.tpl'
+#          output: 'trivy-results.sarif'
+#
+#      - name: Upload Trivy scan results to GitHub Security tab
+#        uses: github/codeql-action/upload-sarif@v1
+#        with:
+#          sarif_file: 'trivy-results.sarif'
 
   codeql:
     name: CodeQL
