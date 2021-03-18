@@ -29,8 +29,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@master
       - name: Build a Docker image
-        run: docker build -t test-security-tools:${{ github.sha }} .
+        uses: docker/build-push-action@v2
         with:
+          tags: test-security-tools
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
           outputs: type=oci,dest=/tmp/test-security-tools.tar
       - name: Upload test-security-tools image as artifact
         uses: actions/upload-artifact@v2
