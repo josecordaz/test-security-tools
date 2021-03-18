@@ -23,18 +23,17 @@ jobs:
           github-token: ${{ secrets.GH_TOKEN }}
 
   docker:
-    name: Docker build
+    name: Docker
     runs-on: ubuntu-latest
-    services:
-      registry:
-        image: registry:2
-        ports:
-          - 5000:5000
     steps:
+      - name: Login to GitHub Packages Docker Registry
+        uses: docker/login-action@v1
+        with:
+          registry: docker.pkg.github.com
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GH_TOKEN }}
       - name: Checkout
         uses: actions/checkout@master
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
         with:
@@ -44,38 +43,46 @@ jobs:
         with:
           context: .
           push: true
-          tags: localhost:5000/test-security-tools:${{ github.sha }}
-          cache-from: type=registry,ref=test-security-tools:${{ github.sha }}
+          tags: ${{ github.repository_owner }}/test-security-tools:${{ github.sha }}
+          cache-from: type=registry,ref=${{ github.repository_owner }}/test-security-tools:${{ github.sha }}
           cache-to: type=inline
       - name: Inspect
         run: |
-          docker buildx imagetools inspect localhost:5000/test-security-tools:${{ github.sha }}
-      - name: Run Snyk to check Docker image for vulnerabilities
-        # Snyk can be used to break the build when it detects vulnerabilities.
-        # In this case we want to upload the issues to GitHub Code Scanning
-        continue-on-error: true
-        uses: snyk/actions/docker@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_API_TOKEN }}
-        with:
-          image: localhost:5000/test-security-tools:${{ github.sha }}
-      - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/golang@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_API_TOKEN }}
-        with:
-          args: --sarif-file-output=snyk.sarif
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: 'localhost:5000/test-security-tools:${{ github.sha }}'
-          format: 'template'
-          template: '@/contrib/sarif.tpl'
-          output: 'trivy-results.sarif'
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v1
-        with:
-          sarif_file: 'trivy-results.sarif'
+          docker buildx imagetools inspect ${{ github.repository_owner }}/test-security-tools:${{ github.sha }}
+
+# Uncomment this once docker works
+#  snyk:
+#    name: Snyk
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Run Snyk to check Docker image for vulnerabilities
+#        # Snyk can be used to break the build when it detects vulnerabilities.
+#        # In this case we want to upload the issues to GitHub Code Scanning
+#        continue-on-error: true
+#        uses: snyk/actions/docker@master
+#        env:
+#          SNYK_TOKEN: ${{ secrets.SNYK_API_TOKEN }}
+#        with:
+#          image: localhost:5000/test-security-tools:${{ github.sha }}
+#      - name: Run Snyk to check for vulnerabilities
+#        uses: snyk/actions/golang@master
+#        env:
+#          SNYK_TOKEN: ${{ secrets.SNYK_API_TOKEN }}
+#        with:
+#          args: --sarif-file-output=snyk.sarif
+#          THIS WORKS
+#      - name: Run Trivy vulnerability scanner
+#        uses: aquasecurity/trivy-action@master
+#        with:
+#          image-ref: 'localhost:5000/test-security-tools:${{ github.sha }}'
+#          format: 'template'
+#          template: '@/contrib/sarif.tpl'
+#          output: 'trivy-results.sarif'
+#      - name: Upload Trivy scan results to GitHub Security tab
+#        uses: github/codeql-action/upload-sarif@v1
+#        with:
+#          sarif_file: 'trivy-results.sarif'
+
 #      - name: Set up Docker Buildx
 #        id: buildx
 #        uses: docker/setup-buildx-action@v1
@@ -154,18 +161,18 @@ jobs:
 #        with:
 #          sarif_file: 'trivy-results.sarif'
 
-  codeql:
-    name: CodeQL
-    needs: docker
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v1
-        with:
-          languages: go
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v1
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v1
+#  codeql:
+#    name: CodeQL
+#    needs: snyk
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout repository
+#        uses: actions/checkout@v2
+#      - name: Initialize CodeQL
+#        uses: github/codeql-action/init@v1
+#        with:
+#          languages: go
+#      - name: Autobuild
+#        uses: github/codeql-action/autobuild@v1
+#      - name: Perform CodeQL Analysis
+#        uses: github/codeql-action/analyze@v1
