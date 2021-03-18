@@ -53,6 +53,10 @@ jobs:
         with:
           sarif_file: snyk.sarif
 
+  trivy:
+    name: Snyk
+    runs-on: ubuntu-latest
+    steps:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
