@@ -59,7 +59,12 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_API_TOKEN }}
         with:
           image: localhost:5000/test-security-tools:${{ github.sha }}
-
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/golang@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_API_TOKEN }}
+        with:
+          args: --sarif-file-output=snyk.sarif
 #      - name: Set up Docker Buildx
 #        id: buildx
 #        uses: docker/setup-buildx-action@v1
