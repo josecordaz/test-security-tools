@@ -52,7 +52,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v2
         with:
-          name: test-security-tools
+          name: test-security-tools:${{ github.sha }}
           path: /tmp
       - name: Load Docker image
         run: |
