@@ -50,10 +50,10 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: test-security-tools:${{ github.sha }}
-          path: /tmp
+          path: path/to/cache
       - name: Load Docker image
         run: |
-          docker load --input /tmp/test-security-tools.tar
+          docker load --input path/to/cache/ .
           docker image ls -a
       - name: Run Snyk to check Docker image for vulnerabilities
         # Snyk can be used to break the build when it detects vulnerabilities.
