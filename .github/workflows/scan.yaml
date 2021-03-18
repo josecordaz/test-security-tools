@@ -61,7 +61,8 @@ jobs:
         with:
           image: ${{ secrets.DOCKER_HUB_USERNAME }}/test-security-tools:${{ github.sha }}
           sarif: true
-          command: test > snyk.sarif && pwd
+#          args:
+#          command: test > snyk.sarif && pwd
 #      - name: Run Snyk to check for vulnerabilities
 #        uses: snyk/actions/golang@master
 #        env:
