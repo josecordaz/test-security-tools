@@ -68,6 +68,7 @@ jobs:
 
   codeql:
     name: CodeQL
+    needs: snyk
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
