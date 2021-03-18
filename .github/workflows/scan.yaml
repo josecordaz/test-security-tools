@@ -50,6 +50,15 @@ jobs:
       - name: Inspect
         run: |
           docker buildx imagetools inspect localhost:5000/test-security-tools:${{ github.sha }}
+      - name: Run Snyk to check Docker image for vulnerabilities
+        # Snyk can be used to break the build when it detects vulnerabilities.
+        # In this case we want to upload the issues to GitHub Code Scanning
+        continue-on-error: true
+        uses: snyk/actions/docker@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_API_TOKEN }}
+        with:
+          image: localhost:5000/test-security-tools:${{ github.sha }}
 
 #      - name: Set up Docker Buildx
 #        id: buildx
@@ -62,44 +71,44 @@ jobs:
 #          cache-to: |
 #            type=local,dest=tmp/test-security-tools.tar .
 
-  snyk:
-    name: Snyk
-    runs-on: ubuntu-latest
-    needs: docker
-    steps:
-      - name: Checkout
-        uses: actions/checkout@master
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-        with:
-          driver-opts: network=host
-      - name: Build and push
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          push: true
-          tags: localhost:5000/test-security-tools:${{ github.sha }}
-          cache-from: type=registry,ref=test-security-tools:${{ github.sha }}
-          cache-to: type=inline
-      - name: Run Snyk to check Docker image for vulnerabilities
-        # Snyk can be used to break the build when it detects vulnerabilities.
-        # In this case we want to upload the issues to GitHub Code Scanning
-        continue-on-error: true
-        uses: snyk/actions/docker@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_API_TOKEN }}
-        with:
-          image: localhost:5000/test-security-tools:${{ github.sha }}
-#          args: --file=Dockerfile
-
-      - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/golang@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_API_TOKEN }}
-        with:
-          args: --sarif-file-output=snyk.sarif
+#  snyk:
+#    name: Snyk
+#    runs-on: ubuntu-latest
+#    needs: docker
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@master
+#      - name: Set up QEMU
+#        uses: docker/setup-qemu-action@v1
+#      - name: Set up Docker Buildx
+#        uses: docker/setup-buildx-action@v1
+#        with:
+#          driver-opts: network=host
+#      - name: Build and push
+#        uses: docker/build-push-action@v2
+#        with:
+#          context: .
+#          push: true
+#          tags: localhost:5000/test-security-tools:${{ github.sha }}
+#          cache-from: type=registry,ref=test-security-tools:${{ github.sha }}
+#          cache-to: type=inline
+#      - name: Run Snyk to check Docker image for vulnerabilities
+#        # Snyk can be used to break the build when it detects vulnerabilities.
+#        # In this case we want to upload the issues to GitHub Code Scanning
+#        continue-on-error: true
+#        uses: snyk/actions/docker@master
+#        env:
+#          SNYK_TOKEN: ${{ secrets.SNYK_API_TOKEN }}
+#        with:
+#          image: localhost:5000/test-security-tools:${{ github.sha }}
+##          args: --file=Dockerfile
+#
+#      - name: Run Snyk to check for vulnerabilities
+#        uses: snyk/actions/golang@master
+#        env:
+#          SNYK_TOKEN: ${{ secrets.SNYK_API_TOKEN }}
+#        with:
+#          args: --sarif-file-output=snyk.sarif
 
       - name: Upload result to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v1
@@ -131,7 +140,7 @@ jobs:
 
   codeql:
     name: CodeQL
-    needs: snyk
+    needs: docker
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
