@@ -60,7 +60,7 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_API_TOKEN }}
         with:
           image: ${{ secrets.DOCKER_HUB_USERNAME }}/test-security-tools:${{ github.sha }}
-          args: --sarif-file-output=/github/workspace/snyk.sarif
+          args: --sarif-file-output=/github/workspace/snyk.sarif --file=/github/workspace/Dockerfile
           sarif: true
 #          args:
 #          command: test > snyk.sarif && pwd
