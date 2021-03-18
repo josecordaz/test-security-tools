@@ -36,6 +36,7 @@ jobs:
       - name: Build
         run: |
           docker build . # will run buildx
+          docker image ls -a
       - name: Builder instance name
         run: echo ${{ steps.buildx.outputs.name }}
       - name: Available platforms
