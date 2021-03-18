@@ -60,6 +60,7 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_API_TOKEN }}
         with:
           image: ${{ secrets.DOCKER_HUB_USERNAME }}/test-security-tools:${{ github.sha }}
+          args: --file=Dockerfile
 #      - name: Run Snyk to check for vulnerabilities
 #        uses: snyk/actions/golang@master
 #        env:
