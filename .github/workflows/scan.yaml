@@ -159,18 +159,20 @@ jobs:
 #        with:
 #          sarif_file: 'trivy-results.sarif'
 
-#  codeql:
-#    name: CodeQL
-#    needs: snyk
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout repository
-#        uses: actions/checkout@v2
-#      - name: Initialize CodeQL
-#        uses: github/codeql-action/init@v1
-#        with:
-#          languages: go
-#      - name: Autobuild
-#        uses: github/codeql-action/autobuild@v1
-#      - name: Perform CodeQL Analysis
-#        uses: github/codeql-action/analyze@v1
+  codeql:
+    name: CodeQL
+    needs:
+      - snyk
+      - trivy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v1
+        with:
+          languages: go
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v1
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v1
