@@ -69,6 +69,8 @@ jobs:
           args: -d --print-deps --sarif-file-output=snyk.sarif --file=/test-security-tools
 #          args: --sarif-file-output=/github/workspace/snyk.sarif --file=go.mod -d
           sarif: true
+      - name: Setup upterm session
+        uses: lhotari/action-upterm@v1
 #          args:
 #          command: test > snyk.sarif && pwd
 #      - name: Run Snyk to check for vulnerabilities
