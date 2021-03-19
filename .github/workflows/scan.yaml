@@ -68,7 +68,7 @@ jobs:
           image: josecordaz/test-security-tools:latest
           args: -d --print-deps
 #          args: --sarif-file-output=/github/workspace/snyk.sarif --file=go.mod -d
-#          sarif: true
+          sarif: true
 #          args:
 #          command: test > snyk.sarif && pwd
 #      - name: Run Snyk to check for vulnerabilities
