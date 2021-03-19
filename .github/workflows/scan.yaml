@@ -45,18 +45,12 @@ jobs:
         run: |
           docker buildx imagetools inspect ${{ secrets.DOCKER_HUB_USERNAME }}/test-security-tools:${{ github.sha }}
 
-# Uncomment this once docker works
   snyk:
     name: Snyk
     runs-on: ubuntu-latest
     needs: docker
     steps:
       - uses: actions/checkout@v2
-#      - name: Login to GitHub Packages Docker Registry
-#        uses: docker/login-action@v1
-#        with:
-#          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-#          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
       - name: Run Snyk to check Docker image for vulnerabilities
         # Snyk can be used to break the build when it detects vulnerabilities.
         # In this case we want to upload the issues to GitHub Code Scanning
@@ -72,17 +66,22 @@ jobs:
         with:
           sarif_file: snyk.sarif
 #          THIS WORKS
-#      - name: Run Trivy vulnerability scanner
-#        uses: aquasecurity/trivy-action@master
-#        with:
-#          image-ref: 'localhost:5000/test-security-tools:${{ github.sha }}'
-#          format: 'template'
-#          template: '@/contrib/sarif.tpl'
-#          output: 'trivy-results.sarif'
-#      - name: Upload Trivy scan results to GitHub Security tab
-#        uses: github/codeql-action/upload-sarif@v1
-#        with:
-#          sarif_file: 'trivy-results.sarif'
+  trivy:
+    name: Snyk
+    runs-on: ubuntu-latest
+    needs: docker
+    steps:
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'localhost:5000/test-security-tools:${{ github.sha }}'
+          format: 'template'
+          template: '@/contrib/sarif.tpl'
+          output: 'trivy-results.sarif'
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: 'trivy-results.sarif'
 
 #      - name: Set up Docker Buildx
 #        id: buildx
