@@ -21,6 +21,16 @@ jobs:
           # FOSSA Push-Only API Token
           fossa-api-key: ${{ secrets.FOSSA_API_KEY }}
           github-token: ${{ secrets.GH_TOKEN }}
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/golang@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_API_TOKEN }}
+        with:
+          args: --sarif-file-output=snyk.code.sarif
+      - name: Upload result to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: snyk.code.sarif
 
   docker:
     name: Docker
