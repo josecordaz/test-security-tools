@@ -7,7 +7,6 @@ COPY . .
 RUN go build
 
 FROM alpine:3.12.4
-#WORKDIR /home/
-#COPY --from=0 /go/src/github.com/josecordaz/test-security-tools/ .
-COPY Dockerfile .
-#CMD ["bin/bash","-c","./test-security-tools"]
+WORKDIR /root/
+COPY --from=0 /go/src/github.com/josecordaz/test-security-tools/ .
+CMD ["./test-security-tools"]
