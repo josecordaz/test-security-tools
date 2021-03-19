@@ -52,6 +52,8 @@ jobs:
 #    needs: docker
     steps:
       - uses: actions/checkout@v2
+      - name: Build a Docker image
+        run: docker build -t your/image-to-test .
       - name: Login to GitHub Packages Docker Registry
         uses: docker/login-action@v1
         with:
@@ -65,10 +67,11 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_API_TOKEN }}
         with:
-          image: josecordaz/test-security-tools:latest
+          image: your/image-to-test
+          args: --file=Dockerfile
 #          args: -d --print-deps --sarif-file-output=snyk.sarif --file=/home
 #          args: --sarif-file-output=/github/workspace/snyk.sarif --file=go.mod -d
-          sarif: true
+#          sarif: true
 #      - name: Setup upterm session
 #        uses: lhotari/action-upterm@v1
 #          args:
