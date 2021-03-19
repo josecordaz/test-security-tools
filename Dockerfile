@@ -9,4 +9,4 @@ RUN go build
 FROM alpine:3.12.4
 WORKDIR /root/
 COPY --from=0 /go/src/github.com/josecordaz/test-security-tools/ .
-CMD ["./app"]
+CMD ["./test-security-tools"]
