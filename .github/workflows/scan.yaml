@@ -67,7 +67,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_API_TOKEN }}
         with:
-          image: your/image-to-test
+          image: josecordaz/test-security-tools:latest
           args: --file=Dockerfile
 #          args: -d --print-deps --sarif-file-output=snyk.sarif --file=/home
 #          args: --sarif-file-output=/github/workspace/snyk.sarif --file=go.mod -d
