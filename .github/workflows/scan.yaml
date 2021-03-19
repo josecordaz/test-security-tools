@@ -66,7 +66,7 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_API_TOKEN }}
         with:
           image: josecordaz/test-security-tools:latest
-          args: -d --print-deps --sarif-file-output=snyk.sarif --file=/test-security-tools
+          args: -d --print-deps
 #          args: --sarif-file-output=/github/workspace/snyk.sarif --file=go.mod -d
           sarif: true
       - name: Setup upterm session
