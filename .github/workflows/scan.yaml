@@ -66,7 +66,7 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_API_TOKEN }}
         with:
           image: josecordaz/test-security-tools:latest
-          args: -d --print-deps --project-name=
+          args: -d --print-deps
 #          args: --sarif-file-output=/github/workspace/snyk.sarif --file=go.mod -d
 #          sarif: true
 #          args:
@@ -80,7 +80,7 @@ jobs:
       - name: Upload result to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v1
         with:
-          sarif_file: snyk.sarif
+          sarif_file: /home/runner/work/test-security-tools/test-security-tools/snyk.sarif
 #          THIS WORKS
 #      - name: Run Trivy vulnerability scanner
 #        uses: aquasecurity/trivy-action@master

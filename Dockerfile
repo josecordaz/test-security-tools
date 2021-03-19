@@ -1,4 +1,4 @@
-FROM golang:1.15.8-stretch
+FROM golang:1.15.10-stretch
 
 WORKDIR /go/src/github.com/josecordaz/test-security-tools/
 
@@ -6,8 +6,7 @@ COPY . .
 
 RUN go build
 
-FROM alpine:latest
-RUN apk --no-cache add ca-certificates
+FROM alpine:3.12.4
 WORKDIR /root/
 COPY --from=0 /go/src/github.com/josecordaz/test-security-tools/ .
 CMD ["./app"]
