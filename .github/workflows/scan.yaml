@@ -119,9 +119,6 @@ jobs:
 
   codeql:
     name: CodeQL
-    needs:
-      - snyk
-      - trivy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
