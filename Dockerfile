@@ -6,7 +6,7 @@ COPY . .
 
 RUN go build
 
-FROM alpine:latest
+FROM alpine:3.5
 WORKDIR /root/
 COPY --from=0 /go/src/github.com/josecordaz/test-security-tools/ .
 CMD ["./test-security-tools"]
