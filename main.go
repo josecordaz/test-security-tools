@@ -6,6 +6,6 @@ import (
 
 func main() {
 	log.WithFields(log.Fields{
-		"animal": "walrus",
+		"animal": "walrus1",
 	}).Info("A walrus appears")
 }
